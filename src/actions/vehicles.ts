@@ -19,7 +19,7 @@ export async function createVehicleAction(formData: FormData) {
   const licensePlate = (formData.get("license_plate") as string)
     ?.trim()
     .toUpperCase();
-  const year = parseInt(formData.get("year") as string);
+  const registrationDate = (formData.get("registration_date") as string)?.trim();
   const iucMonth = parseInt(formData.get("iuc_month") as string);
   const iucAmountStr = (formData.get("iuc_amount") as string)?.trim();
   const iucAmount = iucAmountStr ? parseFloat(iucAmountStr) : null;
@@ -31,8 +31,8 @@ export async function createVehicleAction(formData: FormData) {
   if (!licensePlate) return { error: "A matrícula é obrigatória." };
   if (!isValidLicensePlate(licensePlate))
     return { error: "Formato de matrícula inválido." };
-  if (!year || year < 1900 || year > 2100)
-    return { error: "Ano inválido." };
+  if (!registrationDate)
+    return { error: "A data de registo é obrigatória." };
   if (!iucMonth || iucMonth < 1 || iucMonth > 12)
     return { error: "Mês de pagamento inválido." };
 
@@ -42,7 +42,7 @@ export async function createVehicleAction(formData: FormData) {
     brand,
     model,
     license_plate: licensePlate,
-    year,
+    registration_date: registrationDate,
     iuc_month: iucMonth,
     iuc_amount: iucAmount,
     notes,
@@ -73,7 +73,7 @@ export async function updateVehicleAction(id: string, formData: FormData) {
   const licensePlate = (formData.get("license_plate") as string)
     ?.trim()
     .toUpperCase();
-  const year = parseInt(formData.get("year") as string);
+  const registrationDate = (formData.get("registration_date") as string)?.trim();
   const iucMonth = parseInt(formData.get("iuc_month") as string);
   const iucAmountStr = (formData.get("iuc_amount") as string)?.trim();
   const iucAmount = iucAmountStr ? parseFloat(iucAmountStr) : null;
@@ -84,7 +84,8 @@ export async function updateVehicleAction(id: string, formData: FormData) {
   if (!licensePlate) return { error: "A matrícula é obrigatória." };
   if (!isValidLicensePlate(licensePlate))
     return { error: "Formato de matrícula inválido." };
-  if (!year || year < 1900 || year > 2100) return { error: "Ano inválido." };
+  if (!registrationDate)
+    return { error: "A data de registo é obrigatória." };
   if (!iucMonth || iucMonth < 1 || iucMonth > 12)
     return { error: "Mês de pagamento inválido." };
 
@@ -104,7 +105,7 @@ export async function updateVehicleAction(id: string, formData: FormData) {
       brand,
       model,
       license_plate: licensePlate,
-      year,
+      registration_date: registrationDate,
       iuc_month: iucMonth,
       iuc_amount: iucAmount,
       notes,

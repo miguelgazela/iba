@@ -75,7 +75,7 @@ CREATE TABLE public.iba_vehicles (
   brand TEXT NOT NULL,
   model TEXT NOT NULL,
   license_plate TEXT NOT NULL,
-  year INTEGER NOT NULL CHECK (year >= 1900 AND year <= 2100),
+  registration_date DATE NOT NULL,
   iuc_month INTEGER NOT NULL CHECK (iuc_month >= 1 AND iuc_month <= 12),
   iuc_amount NUMERIC(10,2),
   is_active BOOLEAN NOT NULL DEFAULT true,

@@ -34,6 +34,9 @@ export function VehicleForm({ vehicle, clientId, clientName }: VehicleFormProps)
   const [plateError, setPlateError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [plate, setPlate] = useState(vehicle?.license_plate ?? "");
+  const [iucMonth, setIucMonth] = useState(
+    vehicle?.iuc_month?.toString() ?? ""
+  );
   const isEdit = !!vehicle;
 
   function handlePlateChange(value: string) {
@@ -46,21 +49,32 @@ export function VehicleForm({ vehicle, clientId, clientName }: VehicleFormProps)
     }
   }
 
+  function handleDateChange(value: string) {
+    if (value) {
+      const month = new Date(value).getMonth() + 1;
+      setIucMonth(month.toString());
+    }
+  }
+
   async function handleSubmit(formData: FormData) {
     setError(null);
     setLoading(true);
 
-    const result = isEdit
-      ? await updateVehicleAction(vehicle.id, formData)
-      : await createVehicleAction(formData);
+    try {
+      const result = isEdit
+        ? await updateVehicleAction(vehicle.id, formData)
+        : await createVehicleAction(formData);
 
-    if (result?.error) {
-      setError(result.error);
+      if (result?.error) {
+        setError(result.error);
+        setLoading(false);
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
+      setError("Ocorreu um erro inesperado. Tente novamente.");
       setLoading(false);
     }
   }
-
-  const currentYear = new Date().getFullYear();
 
   return (
     <Card>
@@ -117,22 +131,25 @@ export function VehicleForm({ vehicle, clientId, clientName }: VehicleFormProps)
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="year">Ano de Registo *</Label>
+              <Label htmlFor="registration_date">Data de Registo *</Label>
               <Input
-                id="year"
-                name="year"
-                type="number"
+                id="registration_date"
+                name="registration_date"
+                type="date"
                 required
-                min={1900}
-                max={currentYear + 1}
-                defaultValue={vehicle?.year ?? currentYear}
+                defaultValue={vehicle?.registration_date ?? ""}
+                onChange={(e) => handleDateChange(e.target.value)}
               />
+              <p className="text-xs text-muted-foreground">
+                O mês de pagamento IUC será preenchido automaticamente.
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="iuc_month">Mês de Pagamento IUC *</Label>
               <Select
                 name="iuc_month"
-                defaultValue={vehicle?.iuc_month?.toString() ?? ""}
+                value={iucMonth}
+                onValueChange={setIucMonth}
                 required
               >
                 <SelectTrigger id="iuc_month">

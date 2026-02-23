@@ -61,7 +61,7 @@ export function VehicleList({
             <TableRow>
               <TableHead>Matrícula</TableHead>
               <TableHead>Marca / Modelo</TableHead>
-              <TableHead>Ano</TableHead>
+              <TableHead>Data Registo</TableHead>
               <TableHead>Mês IUC</TableHead>
               <TableHead className="text-right">Valor</TableHead>
               <TableHead>Estado</TableHead>
@@ -79,7 +79,9 @@ export function VehicleList({
                   <TableCell className="font-medium">
                     {vehicle.brand} {vehicle.model}
                   </TableCell>
-                  <TableCell>{vehicle.year}</TableCell>
+                  <TableCell>
+                    {new Date(vehicle.registration_date).toLocaleDateString("pt-PT")}
+                  </TableCell>
                   <TableCell>{getMonthName(vehicle.iuc_month)}</TableCell>
                   <TableCell className="text-right font-mono">
                     {vehicle.iuc_amount
@@ -131,7 +133,7 @@ export function VehicleList({
                     {vehicle.brand} {vehicle.model}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {vehicle.year} &middot; IUC: {getMonthName(vehicle.iuc_month)}
+                    {new Date(vehicle.registration_date).toLocaleDateString("pt-PT")} &middot; IUC: {getMonthName(vehicle.iuc_month)}
                   </p>
                 </div>
                 <Badge variant={status.variant}>{status.label}</Badge>

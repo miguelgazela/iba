@@ -28,7 +28,7 @@ export type Vehicle = {
   brand: string;
   model: string;
   license_plate: string;
-  year: number;
+  registration_date: string;
   iuc_month: number;
   iuc_amount: number | null;
   is_active: boolean;
