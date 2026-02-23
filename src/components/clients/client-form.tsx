@@ -36,12 +36,19 @@ export function ClientForm({ client }: ClientFormProps) {
     setError(null);
     setLoading(true);
 
-    const result = isEdit
-      ? await updateClientAction(client.id, formData)
-      : await createClientAction(formData);
+    try {
+      const result = isEdit
+        ? await updateClientAction(client.id, formData)
+        : await createClientAction(formData);
 
-    if (result?.error) {
-      setError(result.error);
+      if (result?.error) {
+        setError(result.error);
+        setLoading(false);
+      }
+    } catch (e) {
+      // redirect() throws a NEXT_REDIRECT error — that's expected, let it propagate
+      if (e instanceof Error && e.message.includes("NEXT_REDIRECT")) throw e;
+      setError("Ocorreu um erro inesperado. Tente novamente.");
       setLoading(false);
     }
   }

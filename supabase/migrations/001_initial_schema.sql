@@ -21,6 +21,10 @@ CREATE POLICY "IBA: Users can view own profile"
   ON public.iba_profiles FOR SELECT
   USING (auth.uid() = id);
 
+CREATE POLICY "IBA: Users can insert own profile"
+  ON public.iba_profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
+
 CREATE POLICY "IBA: Users can update own profile"
   ON public.iba_profiles FOR UPDATE
   USING (auth.uid() = id)

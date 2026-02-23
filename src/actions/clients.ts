@@ -24,6 +24,21 @@ export async function createClientAction(formData: FormData) {
   if (!nif) return { error: "O NIF é obrigatório." };
   if (!isValidNIF(nif)) return { error: "NIF inválido." };
 
+  // Ensure profile exists (handles users created before the trigger)
+  const { data: profile } = await supabase
+    .from("iba_profiles")
+    .select("id")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (!profile) {
+    await supabase.from("iba_profiles").insert({
+      id: user.id,
+      full_name: user.user_metadata?.full_name ?? "",
+      email: user.email ?? "",
+    });
+  }
+
   const { error } = await supabase.from("iba_clients").insert({
     user_id: user.id,
     name,
