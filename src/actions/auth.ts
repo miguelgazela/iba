@@ -48,6 +48,8 @@ export async function signup(formData: FormData) {
     options: {
       data: {
         full_name: fullName,
+        // The Supabase project is shared; the profile trigger only fires for this tag.
+        app: "iba",
       },
     },
   });

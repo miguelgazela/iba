@@ -57,13 +57,13 @@ export default function DefinicoesPage() {
       return;
     }
 
-    const { error } = await supabase
-      .from("iba_profiles")
-      .update({
-        full_name: fullName.trim(),
-        phone: phone.trim() || null,
-      })
-      .eq("id", user.id);
+    // Upsert: users created outside the IBA sign-up have no profile row yet.
+    const { error } = await supabase.from("iba_profiles").upsert({
+      id: user.id,
+      email: user.email ?? "",
+      full_name: fullName.trim(),
+      phone: phone.trim() || null,
+    });
 
     if (error) {
       toast.error("Erro ao guardar definições.");
