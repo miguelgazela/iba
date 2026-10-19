@@ -7,6 +7,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const USER_ID = "c697e83a-3a0a-40c4-b834-18788aca69ad";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+  db: { schema: "iba" },
   auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
 });
 
